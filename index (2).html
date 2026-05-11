@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Journey Map — Compra de Automóvil Nuevo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --blue: #2B7FD4;
+    --blue-light: #E6F1FB;
+    --red: #D63B3A;
+    --red-light: #FCEBEB;
+    --green: #1A9670;
+    --green-light: #E1F5EE;
+    --amber: #B86D12;
+    --amber-light: #FDF0D8;
+    --coral: #E8744B;
+    --coral-light: #FEF0EA;
+    --gray-100: #F7F7F8;
+    --gray-200: #ECECEE;
+    --gray-400: #9898A6;
+    --gray-700: #3A3A45;
+    --gray-900: #18181C;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: #F4F3FA;
+    color: var(--gray-900);
+    min-height: 100vh;
+    padding: 32px 20px 48px;
+  }
+
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1.5px solid var(--gray-200);
+  }
+  .header-left h1 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    color: var(--gray-900);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .header-left p { font-size: 13px; color: var(--gray-400); }
+  .header-badge {
+    background: var(--purple);
+    color: white;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  /* PERSONA */
+  .persona-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    padding: 14px 20px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--purple-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: var(--purple);
+    flex-shrink: 0;
+  }
+  .persona-card strong { font-size: 13px; font-weight: 600; color: var(--gray-900); }
+  .persona-card span { font-size: 12px; color: var(--gray-400); display: block; margin-top: 2px; }
+
+  /* JOURNEY TABLE */
+  .journey-wrap { overflow-x: auto; margin-bottom: 36px; }
+  .journey {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(148px, 1fr));
+    gap: 10px;
+    min-width: 1050px;
+  }
+
+  .stage {
+    background: white;
+    border-radius: 14px;
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stage-head {
+    padding: 14px 12px 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .stage-head .ico { font-size: 26px; margin-bottom: 6px; }
+  .stage-head .name { font-size: 12px; font-weight: 600; letter-spacing: 0.01em; }
+  .stage-head .num { font-size: 10px; color: var(--gray-400); margin-top: 2px; }
+
+  .row { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); font-size: 11px; color: var(--gray-700); line-height: 1.45; flex: 1; }
+  .row-label { font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-400); margin-bottom: 3px; }
+
+  .pill {
+    display: block;
+    font-size: 10.5px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-top: 4px;
+    line-height: 1.35;
+  }
+  .pill-red   { background: var(--red-light); color: #8B1F1F; border-left: 2.5px solid var(--red); }
+  .pill-green { background: var(--green-light); color: #065038; border-left: 2.5px solid var(--green); }
+
+  /* Stage accent colors */
+  .s1 .stage-head { background: var(--purple-light); color: var(--purple); }
+  .s2 .stage-head { background: var(--blue-light); color: var(--blue); }
+  .s3 .stage-head { background: var(--red-light); color: var(--red); }
+  .s4 .stage-head { background: #FFF0F0; color: #B02020; } /* most critical */
+  .s5 .stage-head { background: var(--green-light); color: var(--green); }
+  .s6 .stage-head { background: var(--amber-light); color: var(--amber); }
+  .s7 .stage-head { background: var(--coral-light); color: var(--coral); }
+
+  .s4 { border: 1.5px solid var(--red); }
+  .s4 .stage-head { position: relative; }
+  .s4 .stage-head::after {
+    content: 'CRÍTICO';
+    position: absolute; top: 8px; right: 8px;
+    font-size: 8px; font-weight: 700;
+    background: var(--red); color: white;
+    padding: 2px 5px; border-radius: 4px;
+  }
+  .s7 { border: 1.5px solid var(--coral); }
+  .s7 .stage-head::after {
+    content: 'PEAK';
+    position: absolute; top: 8px; right: 8px;
+    font-size: 8px; font-weight: 700;
+    background: var(--coral); color: white;
+    padding: 2px 5px; border-radius: 4px;
+  }
+  .s7 .stage-head { position: relative; }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--gray-900);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--gray-200);
+  }
+
+  /* EMOTION CHART */
+  .chart-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 36px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+
+  .chart-card h3 {
+    font-size: 13px; font-weight: 600; color: var(--gray-700);
+    margin-bottom: 16px;
+  }
+
+  svg.emochart { width: 100%; display: block; }
+
+  .emo-labels {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+    margin-top: 8px;
+  }
+  .emo-label {
+    text-align: center;
+    font-size: 10.5px;
+    color: var(--gray-400);
+    padding: 0 4px;
+  }
+  .emo-label .eico { font-size: 16px; display: block; margin-bottom: 2px; }
+
+  .legend-row {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--gray-200);
+  }
+  .leg { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--gray-400); }
+  .leg-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* STRATEGIES */
+  .strat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+  .strat-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .strat-card .s-ico { font-size: 22px; margin-bottom: 8px; }
+  .strat-card h4 { font-size: 13px; font-weight: 600; color: var(--gray-900); margin-bottom: 5px; }
+  .strat-card p { font-size: 11.5px; color: var(--gray-400); line-height: 1.5; }
+  .badge {
+    display: inline-block;
+    font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 20px; margin-top: 8px;
+  }
+  .badge-pain   { background: var(--red-light); color: #8B1F1F; }
+  .badge-opp    { background: var(--green-light); color: #065038; }
+  .badge-neutral{ background: var(--purple-light); color: var(--purple); }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--gray-400);
+    padding-top: 20px;
+    border-top: 1px solid var(--gray-200);
+  }
+
+  @media (max-width: 700px) {
+    .strat-grid { grid-template-columns: 1fr 1fr; }
+    .header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Customer Journey Map<br>Compra de Automóvil Nuevo</h1>
+      <p>Concesionario / Automotora · Diagnóstico actual + Estrategias de Marketing</p>
+    </div>
+    <span class="header-badge">Marketing de Servicios</span>
+  </div>
+
+  <!-- PERSONA -->
+  <div class="persona-card">
+    <div class="avatar">JM</div>
+    <div>
+      <strong>Jorge Méndez, 38 años — Comprador tipo</strong>
+      <span>Profesional · Primera compra de auto nuevo · Investiga online antes de visitar · Presupuesto definido · Busca financiamiento claro y transparente</span>
+    </div>
+  </div>
+
+  <!-- JOURNEY -->
+  <div class="section-title">Etapas del viaje</div>
+  <div class="journey-wrap">
+    <div class="journey">
+
+      <div class="stage s1">
+        <div class="stage-head">
+          <div class="ico">💡</div>
+          <div class="name">Reconocimiento</div>
+          <div class="num">Etapa 1</div>
+        </div>
+        <div class="row"><div class="row-label">Acción</div>Ve publicidad, escucha recomendaciones de amigos</div>
+        <div class="row"><div class="row-label">Canal</div>Instagram, YouTube, boca a boca</div>
+        <div class="row"><div class="row-label">Emoción</div>😊 Curioso, esperanzado</div>
+        <div class="row">
+          <div class="row-label">Dolor / Oportunidad</div>
+          <span class="pill pill-red">Publicidad genérica, sin propuesta diferenciada</span>
+          <span class="pill pill-green">Contenido de valor + SEO local</span>
+        </div>
+      </div>
+
+      <div class="stage s2">
+        <div class="stage-head">
+          <div class="ico">🔍</div>
+          <div class="name">Investigación</div>
+          <div class="num">Etapa 2</div>
+        </div>
+        <div class="row"><div class="row-label">Acción</div>Compara modelos, calcula cuotas online</div>
+        <div class="row"><div class="row-label">Canal</div>Web, comparadores, foros, YouTube</div>
+        <div class="row"><div class="row-label">Emoción</div>😐 Abrumado, confundido</div>
+        <div class="row">
+          <div class="row-label">Dolor / Oportunidad</div>
+          <span class="pill pill-red">Precios ocultos, sin respuesta rápida del concesionario</span>
+          <span class="pill pill-green">Cotizador web en tiempo real + chatbot 24/7</span>
+        </div>
+      </div>
+
+      <div class="stage s3">
+        <div class="stage-head">
+          <div class="ico">🏢</div>
+          <div class="name">Visita al local</div>
+          <div class="num">Etapa 3</div>
+        </div>
+        <div class="row"><div class="row-label">Acción</div>Visita salón, habla con vendedor, ve modelos</div>
+        <div class="row"><div class="row-label">Canal</div>Concesionario físico</div>
+        <div class="row"><div class="row-label">Emoción</div>😬 Ansioso, presionado</div>
+        <div class="row">
+          <div class="row-label">Dolor / Oportunidad</div>
+          <span class="pill pill-red">Vendedores agresivos, esperas largas</span>
+          <span class="pill pill-green">Venta consultiva + CRM personalizado</span>
+        </div>
+      </div>
+
+      <div class="stage s4">
+        <div class="stage-head">
+          <div class="ico">⏳</div>
+          <div class="name">Espera</div>
+          <div class="num">Etapa 4</div>
+        </div>
+        <div class="row"><div class="row-label">Acción</div>Espera cotización, aprobación de crédito</div>
+        <div class="row"><div class="row-label">Canal</div>Teléfono, email, sala de espera</div>
+        <div class="row"><div class="row-label">Emoción</div>😟 Frustrado, abandonado</div>
+        <div class="row">
+          <div class="row-label">Dolor / Oportunidad</div>
+          <span class="pill pill-red">Sin información, silencio total del vendedor</span>
+          <span class="pill pill-green">Tracking en tiempo real vía WhatsApp / app</span>
+        </div>
+      </div>
+
+      <div class="stage s5">
+        <div class="stage-head">
+          <div class="ico">🚗</div>
+          <div class="name">Test Drive</div>
+          <div class="num">Etapa 5</div>
+        </div>
+        <div class="row"><div class="row-label">Acción</div>Conduce el auto, evalúa confort y tecnología</div>
+        <div class="row"><div class="row-label">Canal</div>Auto de prueba + ruta asignada</div>
+        <div class="row"><div class="row-label">Emoción</div>😄 Emocionado, conectado</div>
+        <div class="row">
+          <div class="row-label">Dolor / Oportunidad</div>
+          <span class="pill pill-red">Ruta muy corta, tiempo insuficiente</span>
+          <span class="pill pill-green">Test drive 24h a domicilio</span>
+        </div>
+      </div>
+
+      <div class="stage s6">
+        <div class="stage-head">
+          <div class="ico">✍️</div>
+          <div class="name">Negociación</div>
+          <div class="num">Etapa 6</div>
+        </div>
+        <div class="row"><div class="row-label">Acción</div>Discute precio, opciones, firma contrato</div>
+        <div class="row"><div class="row-label">Canal</div>Sala de finanzas, documentos físicos</div>
+        <div class="row"><div class="row-label">Emoción</div>😌 Tenso pero expectante</div>
+        <div class="row">
+          <div class="row-label">Dolor / Oportunidad</div>
+          <span class="pill pill-red">Letra chica, cláusulas confusas</span>
+          <span class="pill pill-green">Simulador de cuotas visible + precio transparente</span>
+        </div>
+      </div>
+
+      <div class="stage s7">
+        <div class="stage-head">
+          <div class="ico">🔑</div>
+          <div class="name">Entrega</div>
+          <div class="num">Etapa 7</div>
+        </div>
+        <div class="row"><div class="row-label">Acción</div>Recibe las llaves, estrena su auto</div>
+        <div class="row"><div class="row-label">Canal</div>Concesionario + redes sociales</div>
+        <div class="row"><div class="row-label">Emoción</div>🤩 Eufórico, orgulloso</div>
+        <div class="row">
+          <div class="row-label">Dolor / Oportunidad</div>
+          <span class="pill pill-red">Entrega sin ceremonia, sin seguimiento posterior</span>
+          <span class="pill pill-green">Ritual de entrega + kit bienvenida + foto + club</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EMOTION CHART -->
+  <div class="section-title">Curva emocional del cliente</div>
+  <div class="chart-card">
+    <h3>Escala de emoción a lo largo del viaje — Punto más bajo: Espera · Punto más alto: Entrega</h3>
+
+    <svg class="emochart" viewBox="0 0 860 180" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- Grid lines -->
+      <line x1="50" y1="30"  x2="840" y2="30"  stroke="#ECECEE" stroke-width="1" stroke-dasharray="4 4"/>
+      <line x1="50" y1="80"  x2="840" y2="80"  stroke="#ECECEE" stroke-width="1" stroke-dasharray="4 4"/>
+      <line x1="50" y1="130" x2="840" y2="130" stroke="#ECECEE" stroke-width="1" stroke-dasharray="4 4"/>
+      <text x="44" y="30" text-anchor="end" dominant-baseline="central" font-size="9" fill="#9898A6">Alto</text>
+      <text x="44" y="80" text-anchor="end" dominant-baseline="central" font-size="9" fill="#9898A6">Medio</text>
+      <text x="44" y="130" text-anchor="end" dominant-baseline="central" font-size="9" fill="#9898A6">Bajo</text>
+
+      <!-- Area fill under curve -->
+      <defs>
+        <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#534AB7" stop-opacity="0.12"/>
+          <stop offset="100%" stop-color="#534AB7" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <polygon
+        points="110,68 230,100 350,110 470,155 590,52 710,108 830,22 830,155 110,155"
+        fill="url(#areaGrad)"/>
+
+      <!-- Main line -->
+      <polyline
+        fill="none"
+        stroke="#534AB7"
+        stroke-width="2.5"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+        points="110,68 230,100 350,110 470,155 590,52 710,108 830,22"
+      />
+
+      <!-- Dots -->
+      <circle cx="110" cy="68"  r="6" fill="#7F77DD" stroke="white" stroke-width="2"/>
+      <circle cx="230" cy="100" r="6" fill="#2B7FD4" stroke="white" stroke-width="2"/>
+      <circle cx="350" cy="110" r="6" fill="#D63B3A" stroke="white" stroke-width="2"/>
+      <circle cx="470" cy="155" r="9" fill="#D63B3A" stroke="white" stroke-width="2.5"/>
+      <circle cx="590" cy="52"  r="6" fill="#1A9670" stroke="white" stroke-width="2"/>
+      <circle cx="710" cy="108" r="6" fill="#B86D12" stroke="white" stroke-width="2"/>
+      <circle cx="830" cy="22"  r="9" fill="#E8744B" stroke="white" stroke-width="2.5"/>
+
+      <!-- Emotion labels above dots -->
+      <text x="110" y="57"  text-anchor="middle" font-size="9.5" fill="#534AB7">Curioso</text>
+      <text x="230" y="89"  text-anchor="middle" font-size="9.5" fill="#2B7FD4">Confundido</text>
+      <text x="350" y="99"  text-anchor="middle" font-size="9.5" fill="#D63B3A">Ansioso</text>
+      <text x="470" y="144" text-anchor="middle" font-size="9.5" font-weight="600" fill="#D63B3A">Frustrado</text>
+      <text x="590" y="41"  text-anchor="middle" font-size="9.5" fill="#1A9670">Emocionado</text>
+      <text x="710" y="97"  text-anchor="middle" font-size="9.5" fill="#B86D12">Tenso</text>
+      <text x="830" y="11"  text-anchor="middle" font-size="9.5" font-weight="600" fill="#E8744B">Eufórico</text>
+
+      <!-- Critical label -->
+      <rect x="432" y="159" width="76" height="16" rx="4" fill="#D63B3A"/>
+      <text x="470" y="167" text-anchor="middle" dominant-baseline="central" font-size="8.5" font-weight="700" fill="white">PUNTO MÁS BAJO</text>
+
+      <!-- Peak label -->
+      <rect x="799" y="26" width="42" height="14" rx="4" fill="#E8744B"/>
+      <text x="820" y="33" text-anchor="middle" dominant-baseline="central" font-size="8.5" font-weight="700" fill="white">PEAK</text>
+    </svg>
+
+    <div class="emo-labels">
+      <div class="emo-label"><span class="eico">💡</span>Reconocimiento</div>
+      <div class="emo-label"><span class="eico">🔍</span>Investigación</div>
+      <div class="emo-label"><span class="eico">🏢</span>Visita local</div>
+      <div class="emo-label"><span class="eico">⏳</span>Espera</div>
+      <div class="emo-label"><span class="eico">🚗</span>Test Drive</div>
+      <div class="emo-label"><span class="eico">✍️</span>Negociación</div>
+      <div class="emo-label"><span class="eico">🔑</span>Entrega</div>
+    </div>
+
+    <div class="legend-row">
+      <div class="leg"><div class="leg-dot" style="background:#D63B3A"></div>Punto de dolor (color rojo/frío)</div>
+      <div class="leg"><div class="leg-dot" style="background:#1A9670"></div>Momento positivo (color cálido)</div>
+      <div class="leg"><div class="leg-dot" style="background:#E8744B"></div>Peak emocional — Entrega 🔑</div>
+      <div class="leg"><div class="leg-dot" style="background:#534AB7"></div>Neutral / en proceso</div>
+    </div>
+  </div>
+
+  <!-- STRATEGIES -->
+  <div class="section-title">Estrategias de marketing por punto crítico</div>
+  <div class="strat-grid">
+
+    <div class="strat-card">
+      <div class="s-ico">📱</div>
+      <h4>Investigación digital</h4>
+      <p>Cotizador online en tiempo real, simulador de cuotas visible, chatbot con respuesta en menos de 2 minutos.</p>
+      <span class="badge badge-neutral">Canal digital</span>
+    </div>
+
+    <div class="strat-card">
+      <div class="s-ico">⏳</div>
+      <h4>Gestión de la espera</h4>
+      <p>Tracking del proceso vía WhatsApp o app propia. Notificaciones proactivas en cada hito del crédito y la preparación del auto.</p>
+      <span class="badge badge-pain">Punto crítico #1</span>
+    </div>
+
+    <div class="strat-card">
+      <div class="s-ico">💬</div>
+      <h4>Venta consultiva sin presión</h4>
+      <p>Asesor capacitado en escucha activa. CRM con historial del cliente. Ambiente cómodo sin urgencia artificial.</p>
+      <span class="badge badge-pain">Punto crítico #2</span>
+    </div>
+
+    <div class="strat-card">
+      <div class="s-ico">🚗</div>
+      <h4>Test drive extendido</h4>
+      <p>Prueba de 24 horas a domicilio. Video personalizado enviado post-test para reforzar el vínculo emocional con el modelo.</p>
+      <span class="badge badge-opp">Oportunidad</span>
+    </div>
+
+    <div class="strat-card">
+      <div class="s-ico">🔑</div>
+      <h4>Ritual de entrega</h4>
+      <p>Ceremonia de llaves, foto con el auto, kit de bienvenida físico, video corto para compartir en redes sociales del cliente.</p>
+      <span class="badge badge-opp">Peak emocional</span>
+    </div>
+
+    <div class="strat-card">
+      <div class="s-ico">☁️</div>
+      <h4>Post-venta digital</h4>
+      <p>App propietaria, club de propietarios, recordatorios de mantención, programa de referidos con beneficios exclusivos.</p>
+      <span class="badge badge-neutral">Fidelización</span>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Customer Journey Map · Compra de Automóvil Nuevo · Automotora / Concesionario · Marketing de Servicios
+  </div>
+
+</div>
+</body>
+</html>
